@@ -31,7 +31,7 @@ through the convenitent `@loopback/testlab` package. This is installed if the
 project was created using the CLI.
 
 ### Manual Setup - Using Mocha
-- Install `mocha` by running `npm i mocha`. This will save the package in
+- Install `mocha` by running `npm i --save-dev mocha`. This will save the package in
 `package.json` as well.
 - In `package.json` add under `scripts` the following:
 `test: npm run build && mocha --recursive ./dist/test`
@@ -52,16 +52,15 @@ code to pass the tests
 ### Unit Tests
 
 A unit test checks the smallest unit of code possible, in this case a function.
-This helps to ensure variable and state changes by outside actors don't affect
-the result. If the function has dependencies, you should substitute them with
-[test doubles](https://en.wikipedia.org/wiki/Test_double) to ensure only the
-function you are testing affects the results. SinonJS is our recommended
-framework to create test doubles in the form of spies, stubs, and mocks.
+This ensures variable and state changes by outside actors don't affect the
+results. [Test doubles](https://en.wikipedia.org/wiki/Test_double) should be
+used to substitue function dependencies. You can learn more about test doubles
+and Unit testing [here: Testing your Application: Unit testing](http://loopback.io/doc/en/lb4/Testing-your-application.html#unit-testing).
 
 #### Controllers
 
-At it's core, a controller is a simple class that is responsible for related
-actions on a object. Unit testing a controller in an extension is the same as
+At its core, a controller is a simple class that is responsible for related
+actions on an object. Unit testing a controller in an extension is the same as
 unit testing a controller for an application.
 
 To test a controller you want to instantiate a new instance of your controller
@@ -84,13 +83,13 @@ import {PingController} from '../../..';
 import {expect} from '@loopback/testlab';
 
 describe('PingController() unit', () => {
-  it('.ping() (no arg)', () => {
+  it('pings with no input', () => {
     const controller = new PingController();
     const result = controller.ping();
     expect(result).to.equal('You pinged with undefined');
   });
 
-  it('.ping(\'hello\')', () => {
+  it('pings with msg \'hello\'', () => {
     const controller = new PingController();
     const result = controller.ping('hello');
     expect(result).to.equal('You pinged with hello');
@@ -105,7 +104,7 @@ You can find a more advanced example on testing controllers in [Unit test your C
 The recommended usage of a decorator is to store metadata about a class or a
 class method. The decorator implementation will usually also provide a function
 to retrieve the metadata stored by it based on the className and method name.
-So for a unit test, it is important to test that we can store metadata via a
+For a unit test, it is important to test that we can store metadata via a
 decorator and retrieve the correct metadata. *The retrieval gets tested as a
 consequence of validating the metadata was stored.*
 
@@ -155,18 +154,17 @@ describe('test.decorator (unit)', () => {
 
 #### Mixins
 
-A Mixin is a function that extends a base Class (usually `Application` Class)
-and returns an anonymous class, adding new contructor properties, methods, etc.
-to the base Class. Due to the fact that the Mixin returns an anonymous class,
-it is not possible to write a unit test in isolation for a Mixin. The
-recommended practice is to write an integration test for a Mixin as shown [here: Integrations Tests Mixins]().
+A Mixin is a TypeScript function that extends the `Application` Class, adding
+new constructor properties, methods, etc. It is difficult to write a unit test
+for a Mixin without the `Application` Class dependency. The recommended practice
+is to write an integration test ofr a Mixin as show below.
 
 #### Providers
 
-A Provider is a Class, similar to a Controller but it implements the Provider
-interface. This interface just requires the Class to have a `value()` function.
-A unit test for a provider should test the `value()` function by instantiating
-a new Provider class, using a test double for any constructor arguments.
+A Provider is a Class that implements the Provider interface. This interface
+requires the Class to have a `value()` function. A unit test for a provider
+should test the `value()` function by instantiating a new Provider class, using
+a test double for any constructor arguments.
 
 **`src/providers/random-number.provider.ts`**
 ```ts
